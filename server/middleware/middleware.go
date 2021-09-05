@@ -16,7 +16,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-const connectionString = "mongodb://127.0.0.1:27017" //27017
+const connectionString = "mongodb://127.0.0.1:27017"
 const dbName = "test"
 const collName = "notelist"
 
@@ -50,7 +50,7 @@ func getAllNote() (result []primitive.M) {
 	return
 }
 
-func CreateNote(w http.ResponseWriter, r *http.Request) {
+func InsertNote(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "json")
 	var note models.Note
 	err := json.NewDecoder(r.Body).Decode(&note)
