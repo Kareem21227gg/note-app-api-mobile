@@ -51,7 +51,7 @@ func getAllNote() (results []primitive.M) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	//should be tyr next !!!!!!!!!!!!!
+	//should be try next !!!!!!!!!!!!!
 	for cursor.Next(context.Background()) {
 		var result bson.M
 		err := cursor.Decode(&result)
@@ -108,4 +108,22 @@ func deleteNote(idHex string) {
 	}
 
 	fmt.Println("Deleted Document", d.DeletedCount)
+}
+
+func DeleteAllNote(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "json")
+
+	count := deleteAllNote()
+	inter := struct {
+		DeletedCount int64 `json:"delete_counter"`
+	}{}
+	inter.DeletedCount = count
+	json.NewEncoder(w).Encode(inter)
+}
+func deleteAllNote() int64 {
+	res, err := collection.DeleteMany(context.Background(), bson.D{})
+	if err != nil {
+		log.Fatal(err)
+	}
+	return res.DeletedCount
 }
