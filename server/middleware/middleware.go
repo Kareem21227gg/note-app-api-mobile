@@ -33,91 +33,67 @@ func init() {
 		log.Fatal(err)
 	}
 	fmt.Printf("\"Connected successfully to mongoDB!\": %v\n", "Connected successfully to mongoDB!")
-	//what haben to the data when change the namer of db
 	collection = client.Database(dbName).Collection(collName)
 	fmt.Printf("\"Collection instance created!\": %v\n", "Collection instance created!")
 }
 
 func GetAllNote(w http.ResponseWriter, r *http.Request) {
-	//what is the fuck all this header for
-	w.Header().Set("Context-Type", "applictaon/x-www-from-urlencoded")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Content-Type", "json")
-	payload := getAllNote()
-	json.NewEncoder(w).Encode(payload)
+	json.NewEncoder(w).Encode(models.GetAllResult{Result: getAllNote()})
 }
-func getAllNote() (results []primitive.M) {
+func getAllNote() (result []primitive.M) {
 	cursor, err := collection.Find(context.Background(), bson.D{})
 	if err != nil {
 		log.Fatal(err)
 	}
-	//should be try next !!!!!!!!!!!!!
-	for cursor.Next(context.Background()) {
-		var result bson.M
-		err := cursor.Decode(&result)
-		if err != nil {
-			log.Fatal(err)
-		}
-		results = append(results, result)
-	}
-	cursor.Close(context.Background())
+	cursor.All(context.Background(), &result)
 	return
 }
 
 func CreateNote(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "POST")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	w.Header().Set("Content-Type", "json")
 	var note models.Note
 	err := json.NewDecoder(r.Body).Decode(&note)
 	if err != nil {
-		fmt.Printf("r.Body: %v\n", r.Body)
 		json.NewEncoder(w).Encode(err)
 		return
 	}
-	fmt.Println(note, r.Body)
-	insertOneNote(note)
-	json.NewEncoder(w).Encode(note)
+	var res models.InsertResult
+	res.InsertedID = insertOneNote(note)
+	json.NewEncoder(w).Encode(res)
 }
 
-func insertOneNote(note models.Note) {
+func insertOneNote(note models.Note) interface{} {
 	insertResult, err := collection.InsertOne(context.Background(), note)
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("Inserted a Single Record ", insertResult.InsertedID)
+	return insertResult.InsertedID
 }
 
 func DeleteNote(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "DELETE")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-	params := mux.Vars(r)
-	deleteNote(params["id"])
-	json.NewEncoder(w).Encode(params["id"])
+	w.Header().Set("Content-Type", "json")
+	//Could i be more complicated???
+	json.NewEncoder(w).Encode(models.DeleteOneResult{Id: deleteNote(mux.Vars(r)["id"])})
 }
-func deleteNote(idHex string) {
+func deleteNote(idHex string) string {
 	id, _ := primitive.ObjectIDFromHex(idHex)
-	fmt.Printf("id: %v\n", id)
 	filter := bson.M{"_id": id}
-	d, err := collection.DeleteOne(context.Background(), filter)
+	count, err := collection.DeleteOne(context.Background(), filter)
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	fmt.Println("Deleted Document", d.DeletedCount)
+	if count.DeletedCount == 1 {
+		return idHex
+	}
+	return ""
 }
 
 func DeleteAllNote(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "json")
 
 	count := deleteAllNote()
-	inter := struct {
-		DeletedCount int64 `json:"delete_counter"`
-	}{}
-	inter.DeletedCount = count
+	inter := models.DeleteAllResult{DeletedCount: count}
 	json.NewEncoder(w).Encode(inter)
 }
 func deleteAllNote() int64 {
