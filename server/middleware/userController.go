@@ -1,4 +1,4 @@
-package controllers
+package middleware
 
 import (
 	"context"
@@ -12,11 +12,10 @@ import (
 
 	"github.com/go-playground/validator"
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
 	"golang.org/x/crypto/bcrypt"
 )
 
-var userCollection *mongo.Collection = database.OpenCollection("user")
+var userCollection = database.OpenCollection("user")
 var validate = validator.New()
 
 func Hashpassword(passworsd string) string {
@@ -78,7 +77,7 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	json.NewEncoder(w).Encode(models.SingUpResult{Id: resultInsertionNumber.InsertedID})
+	json.NewEncoder(w).Encode(models.SingUpResult{Id: resultInsertionNumber.InsertedID.(string)})
 }
 
 func Login(w http.ResponseWriter, r *http.Request) {

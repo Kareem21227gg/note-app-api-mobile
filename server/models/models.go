@@ -8,7 +8,7 @@ type Note struct {
 }
 
 type InsertResult struct {
-	InsertedID interface{} `json:"inserted_id"`
+	InsertedID string `json:"inserted_id"`
 }
 
 type DeleteAllResult struct {
@@ -25,7 +25,7 @@ type ErrorResult struct {
 	Message string `json:"error_msg"`
 }
 type SingUpResult struct {
-	Id interface{} `json:"user_id"`
+	Id string `json:"user_id"`
 }
 type SingInResult struct {
 	User User `json:"user_data"`

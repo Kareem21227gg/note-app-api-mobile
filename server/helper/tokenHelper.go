@@ -17,7 +17,7 @@ var SECRET_KEY string
 func init() {
 	SECRET_KEY = GetEnvMap()["SECRET_KEY"]
 }
-func GenerateAllTokens(email string, name string, id string) (signedToken string, err error) {
+func GenerateAllTokens(email string, name string, id string) (token string, err error) {
 	return jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{"email": email, "name": name, "id": id}).SignedString([]byte(SECRET_KEY))
 }
 

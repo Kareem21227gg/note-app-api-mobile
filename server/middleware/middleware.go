@@ -10,8 +10,18 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func GetAllNote(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "json")
+type HandlerFunction func(*http.ResponseWriter, *http.Request, models.User)
+
+func (f HandlerFunction) Validate(w http.ResponseWriter, r *http.Request) {
+
+	if true {
+		f(&w, r, models.User{})
+	}
+
+}
+
+var GetAllNote HandlerFunction = func(w *http.ResponseWriter, r *http.Request, user models.User) {
+	*w.Header().Set("Content-Type", "json")
 	json.NewEncoder(w).Encode(models.GetAllResult{Result: database.GetAllNote()})
 }
 

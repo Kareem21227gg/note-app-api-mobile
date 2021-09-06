@@ -40,10 +40,10 @@ func GetAllNote() (result []primitive.M) {
 	cursor.All(context.Background(), &result)
 	return
 }
-func InsertOneNote(note models.Note) interface{} {
+func InsertOneNote(note models.Note) string {
 	insertResult, err := collection.InsertOne(context.Background(), note)
 	checkErr(err)
-	return insertResult.InsertedID
+	return insertResult.InsertedID.(string)
 }
 func DeleteNote(idHex string) string {
 	id, _ := primitive.ObjectIDFromHex(idHex)
