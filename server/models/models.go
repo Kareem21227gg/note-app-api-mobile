@@ -3,7 +3,7 @@ package models
 import "go.mongodb.org/mongo-driver/bson/primitive"
 
 type Note struct {
-	ID   primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
+	ID   primitive.ObjectID `bson:"_id,omitempty"`
 	Body string             `json:"body"`
 }
 
@@ -20,4 +20,13 @@ type DeleteOneResult struct {
 }
 type GetAllResult struct {
 	Result []primitive.M `json:"result"`
+}
+type ErrorResult struct {
+	Message string `json:"error_msg"`
+}
+type SingUpResult struct {
+	Id interface{} `json:"user_id"`
+}
+type SingInResult struct {
+	User User `json:"user_data"`
 }

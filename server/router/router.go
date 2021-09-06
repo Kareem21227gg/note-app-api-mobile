@@ -1,6 +1,7 @@
 package router
 
 import (
+	"go-note/server/controllers"
 	"go-note/server/middleware"
 
 	"github.com/gorilla/mux"
@@ -12,6 +13,6 @@ func Router() *mux.Router {
 	router.HandleFunc("/api/note", middleware.InsertNote).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/deleteNote/{id}", middleware.DeleteNote).Methods("DELETE", "OPTIONS")
 	router.HandleFunc("/api/deleteNote", middleware.DeleteAllNote).Methods("DELETE", "OPTIONS")
-
+	router.HandleFunc("/api/singup", controllers.SignUp).Methods("POST", "OPTIONS")
 	return router
 }
