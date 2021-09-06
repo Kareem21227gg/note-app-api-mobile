@@ -2,6 +2,7 @@ package database
 
 import (
 	"context"
+	"fmt"
 
 	"go-note/server/models"
 
@@ -9,29 +10,43 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func GetAllNote() (result []models.Note) {
+func GetAllNote() (result []models.Note, err error) {
 	cursor, err := noteCollection.Find(context.Background(), bson.D{})
-	checkErr(err)
+	if err != nil {
+		return nil, err
+	}
 	cursor.All(context.Background(), &result)
 	return
 }
-func InsertOneNote(note models.Note) string {
+func InsertOneNote(note models.Note) (noteId string, err error) {
 	insertResult, err := noteCollection.InsertOne(context.Background(), note)
-	checkErr(err)
-	return insertResult.InsertedID.(string)
-}
-func DeleteNote(idHex string) string {
-	id, _ := primitive.ObjectIDFromHex(idHex)
-	filter := bson.M{"_id": id}
-	count, err := noteCollection.DeleteOne(context.Background(), filter)
-	checkErr(err)
-	if count.DeletedCount == 1 {
-		return idHex
+	if err != nil {
+		return "", err
 	}
-	return ""
+	noteId = insertResult.InsertedID.(primitive.ObjectID).Hex()
+	return
 }
-func DeleteAllNote() int64 {
+func DeleteNote(idHex string) (id string, err error) {
+	obj, err := primitive.ObjectIDFromHex(idHex)
+	if err != nil {
+		return "", err
+	}
+	filter := bson.M{"_id": obj}
+	count, err := noteCollection.DeleteOne(context.Background(), filter)
+	if err != nil {
+		return "", err
+	}
+	if count.DeletedCount != 1 {
+		err = fmt.Errorf("delete failed")
+		return "", err
+	}
+	return idHex, nil
+}
+func DeleteAllNote() (count int, err error) {
 	res, err := noteCollection.DeleteMany(context.Background(), bson.D{})
-	checkErr(err)
-	return res.DeletedCount
+	if err != nil {
+		return 0, err
+	}
+	count = int(res.DeletedCount)
+	return
 }

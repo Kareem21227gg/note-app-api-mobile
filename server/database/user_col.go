@@ -39,6 +39,7 @@ func UpdateToken(token string, userId string) (err error) {
 		context.Background(),
 		filter,
 		primitive.D{
+
 			primitive.E{"$set", bson.E{Key: "token", Value: token}},
 		},
 	)

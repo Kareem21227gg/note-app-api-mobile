@@ -12,7 +12,7 @@ import (
 
 type HandlerFunction func(*http.ResponseWriter, *http.Request, models.User)
 
-func (f HandlerFunction) Validate(w http.ResponseWriter, r *http.Request) {
+func (f HandlerFunction) TokenRequired(w http.ResponseWriter, r *http.Request) {
 	if true {
 		f(&w, r, models.User{})
 	}
