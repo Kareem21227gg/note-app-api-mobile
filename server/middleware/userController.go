@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"go-note/server/database"
@@ -11,10 +10,8 @@ import (
 	"net/http"
 
 	"github.com/go-playground/validator"
-	"go.mongodb.org/mongo-driver/bson"
 )
 
-var userCollection = database.OpenCollection("user")
 var validate = validator.New()
 
 func SignUp(w http.ResponseWriter, r *http.Request) {
@@ -32,31 +29,26 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	count, err := userCollection.CountDocuments(context.Background(), bson.M{"email": user.Email})
+	exist, _, err := database.FindUserByEmail(user.Email)
 	if err != nil {
-		log.Panic(err)
 		json.NewEncoder(w).Encode(models.ErrorResult{Message: err.Error()})
 		return
 	}
-
-	password := helper.Hashpassword(user.Password)
-	user.Password = password
-
-	if count > 0 {
+	if exist {
 		json.NewEncoder(w).Encode(models.ErrorResult{Message: "this email or phone number already exists"})
 		return
 	}
+	password, _ := helper.Hashpassword(user.Password)
+	user.Password = password
 
-	token, _ := helper.GenerateAllTokens(user.Email, user.Name, user.ID.Hex())
+	token, _ := helper.GenerateAllTokens(user.Email, user.Name, user.ID.Hex(), user.Token)
 	user.Token = token
-
-	resultInsertionNumber, insertErr := userCollection.InsertOne(context.Background(), user)
-	if insertErr != nil {
+	userId, err := database.InserteUser(user)
+	if err != nil {
 		json.NewEncoder(w).Encode(models.ErrorResult{Message: "User item was not created"})
 		return
 	}
-
-	json.NewEncoder(w).Encode(models.SingUpResult{Id: resultInsertionNumber.InsertedID.(string)})
+	json.NewEncoder(w).Encode(models.SingUpResult{Id: userId})
 }
 
 func Login(w http.ResponseWriter, r *http.Request) {
@@ -70,21 +62,25 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = userCollection.FindOne(context.Background(), bson.M{"email": user.Email}).Decode(&foundUser)
+	exist, foundUser, _ := database.FindUserByEmail(user.Email)
 
-	if err != nil {
-		json.NewEncoder(w).Encode(models.ErrorResult{Message: "login or passowrd is incorrect"})
+	if !exist {
+		json.NewEncoder(w).Encode(models.ErrorResult{Message: "email or passowrd is incorrect"})
 		return
 	}
-	passwordIsValid, msg := VerifyPassword(user.Password, foundUser.Password)
-	if passwordIsValid {
+	passwordIsValid, msg := helper.VerifyPassword(user.Password, foundUser.Password)
+	if !passwordIsValid {
 		json.NewEncoder(w).Encode(models.ErrorResult{Message: msg})
 		return
 	}
 
-	token, err := helper.GenerateAllTokens(foundUser.Email, foundUser.Name, foundUser.ID.Hex())
-
-	helper.UpdateAllTokens(token, foundUser.ID.Hex(), userCollection)
-
+	token, err := helper.GenerateAllTokens(foundUser.Email, foundUser.Name, foundUser.ID.Hex(), foundUser.Token)
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = database.UpdateToken(token, foundUser.ID.Hex())
+	if err != nil {
+		log.Fatal(err)
+	}
 	json.NewEncoder(w).Encode(models.SingInResult{User: foundUser})
 }

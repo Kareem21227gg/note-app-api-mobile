@@ -1,24 +1,17 @@
 package helper
 
 import (
-	"context"
 	"go-note/server/models"
-
-	"log"
+	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
-var SECRET_KEY string
+var SECRET_KEY = GetEnvMap()["SECRET_KEY"]
 
-func init() {
-	SECRET_KEY = GetEnvMap()["SECRET_KEY"]
-}
-func GenerateAllTokens(email string, name string, id string) (token string, err error) {
-	return jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{"email": email, "name": name, "id": id}).SignedString([]byte(SECRET_KEY))
+func GenerateAllTokens(email string, name string, id string, oldToken string) (token string, err error) {
+	return jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{"email": email, "name": name, "id": id, "created_at": time.Now()}).SignedString([]byte(SECRET_KEY))
 }
 
 func ValidateToken(token string) (user models.User, errorMsg string) {
@@ -33,19 +26,4 @@ func ValidateToken(token string) (user models.User, errorMsg string) {
 	user.Name = dataMap["name"].(string)
 	user.ID, _ = primitive.ObjectIDFromHex(dataMap["id"].(string))
 	return
-}
-
-func UpdateAllTokens(token string, userId string, userCollection *mongo.Collection) {
-	filter := bson.M{"_id": userId}
-	_, err := userCollection.UpdateOne(
-		context.Background(),
-		filter,
-		primitive.D{
-			primitive.E{"$set", bson.E{Key: "token", Value: token}},
-		},
-	)
-	if err != nil {
-		log.Panic(err)
-	}
-
 }
