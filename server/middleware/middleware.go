@@ -21,8 +21,8 @@ func (f HandlerFunction) Validate(w http.ResponseWriter, r *http.Request) {
 }
 
 var GetAllNote HandlerFunction = func(w *http.ResponseWriter, r *http.Request, user models.User) {
-	*w.Header().Set("Content-Type", "json")
-	json.NewEncoder(w).Encode(models.GetAllResult{Result: database.GetAllNote()})
+	(*w).Header().Set("Content-Type", "json")
+	json.NewEncoder(*w).Encode(models.GetAllResult{Result: database.GetAllNote()})
 }
 
 func InsertNote(w http.ResponseWriter, r *http.Request) {

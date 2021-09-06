@@ -34,6 +34,8 @@ func OpenCollection(collectionName string) *mongo.Collection {
 	collection := client.Database(envMAp["DB_NAME"]).Collection(collectionName)
 	return collection
 }
+
+//chane to return interface
 func GetAllNote() (result []primitive.M) {
 	cursor, err := collection.Find(context.Background(), bson.D{})
 	checkErr(err)
