@@ -20,10 +20,10 @@ var envMAp map[string]string
 
 //TODO:recode error handel
 func init() {
-	fmt.Println("------------")
-	envMAp := helper.GetEnvMap()
+	envMAp = helper.GetEnvMap()
 	clientOptions := options.Client().ApplyURI(envMAp["CONNECTION_STRING"])
-	client, err := mongo.Connect(context.TODO(), clientOptions)
+	var err error
+	client, err = mongo.Connect(context.TODO(), clientOptions)
 	checkErr(err)
 	err = client.Ping(context.TODO(), nil)
 	checkErr(err)
@@ -31,7 +31,7 @@ func init() {
 	fmt.Println("Connected successfully to mongoDB!")
 }
 func OpenCollection(collectionName string) *mongo.Collection {
-	var collection *mongo.Collection = client.Database(envMAp["DB_NAME"]).Collection(collectionName)
+	collection := client.Database(envMAp["DB_NAME"]).Collection(collectionName)
 	return collection
 }
 func GetAllNote() (result []primitive.M) {

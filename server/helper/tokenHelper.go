@@ -35,9 +35,7 @@ func ValidateToken(token string) (user models.User, msg string) {
 }
 
 func UpdateAllTokens(signedToken string, userId string, userCollection *mongo.Collection) {
-
 	filter := bson.M{"_id": userId}
-
 	_, err := userCollection.UpdateOne(
 		context.Background(),
 		filter,

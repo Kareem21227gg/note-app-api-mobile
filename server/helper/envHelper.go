@@ -9,7 +9,7 @@ import (
 
 var envMAp map[string]string
 
-func init() {
+func GetEnvMap() map[string]string {
 	byteSlite, err := os.ReadFile(".env")
 	if err != nil {
 		log.Fatal(err)
@@ -18,7 +18,5 @@ func init() {
 	if err != nil {
 		log.Fatal(err)
 	}
-}
-func GetEnvMap() map[string]string {
 	return envMAp
 }
