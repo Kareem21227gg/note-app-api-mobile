@@ -13,5 +13,6 @@ func Router() *mux.Router {
 	router.HandleFunc("/api/deleteNote/{id}", middleware.DeleteNote).Methods("DELETE", "OPTIONS")
 	router.HandleFunc("/api/deleteNote", middleware.DeleteAllNote).Methods("DELETE", "OPTIONS")
 	router.HandleFunc("/api/singup", middleware.SignUp).Methods("POST", "OPTIONS")
+	router.HandleFunc("/api/login", middleware.Login).Methods("POST", "OPTIONS")
 	return router
 }

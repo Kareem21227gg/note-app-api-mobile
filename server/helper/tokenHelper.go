@@ -21,10 +21,11 @@ func GenerateAllTokens(email string, name string, id string) (token string, err 
 	return jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{"email": email, "name": name, "id": id}).SignedString([]byte(SECRET_KEY))
 }
 
-func ValidateToken(token string) (user models.User, msg string) {
+func ValidateToken(token string) (user models.User, errorMsg string) {
+	//serach the database to find the token then return the user data from user collection
 	JWTtoken, err := jwt.Parse(token, func(t *jwt.Token) (interface{}, error) { return nil, nil })
 	if err != nil {
-		msg = "the token is invalid"
+		errorMsg = "the token is invalid"
 		return
 	}
 	dataMap := JWTtoken.Claims.(jwt.MapClaims)
@@ -34,16 +35,17 @@ func ValidateToken(token string) (user models.User, msg string) {
 	return
 }
 
-func UpdateAllTokens(signedToken string, userId string, userCollection *mongo.Collection) {
+func UpdateAllTokens(token string, userId string, userCollection *mongo.Collection) {
 	filter := bson.M{"_id": userId}
 	_, err := userCollection.UpdateOne(
 		context.Background(),
 		filter,
-		bson.M{
-			"Token": signedToken,
+		primitive.D{
+			primitive.E{"$set", bson.E{Key: "token", Value: token}},
 		},
 	)
 	if err != nil {
 		log.Panic(err)
 	}
+
 }

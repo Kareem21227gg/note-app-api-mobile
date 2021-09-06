@@ -13,11 +13,9 @@ import (
 type HandlerFunction func(*http.ResponseWriter, *http.Request, models.User)
 
 func (f HandlerFunction) Validate(w http.ResponseWriter, r *http.Request) {
-
 	if true {
 		f(&w, r, models.User{})
 	}
-
 }
 
 var GetAllNote HandlerFunction = func(w *http.ResponseWriter, r *http.Request, user models.User) {

@@ -12,32 +12,11 @@ import (
 
 	"github.com/go-playground/validator"
 	"go.mongodb.org/mongo-driver/bson"
-	"golang.org/x/crypto/bcrypt"
 )
 
 var userCollection = database.OpenCollection("user")
 var validate = validator.New()
 
-func Hashpassword(passworsd string) string {
-	hash, err := bcrypt.GenerateFromPassword([]byte(passworsd), 16)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return string(hash)
-}
-
-func VerifyPassword(userPassword string, providedPassword string) (bool, string) {
-	err := bcrypt.CompareHashAndPassword([]byte(providedPassword), []byte(userPassword))
-	check := true
-	msg := ""
-
-	if err != nil {
-		msg = "login or passowrd is incorrect"
-		check = false
-	}
-
-	return check, msg
-}
 func SignUp(w http.ResponseWriter, r *http.Request) {
 	var user models.User
 	err := json.NewDecoder(r.Body).Decode(&user)
@@ -60,7 +39,7 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	password := Hashpassword(user.Password)
+	password := helper.Hashpassword(user.Password)
 	user.Password = password
 
 	if count > 0 {
