@@ -2,6 +2,7 @@ package database
 
 import (
 	"context"
+	"fmt"
 	"go-note/server/models"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -9,23 +10,41 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
+func FindUserByToken(token string) (exist bool, user models.User, err error) {
+	result := userCollection.FindOne(context.Background(), bson.M{"token": token})
+	exist = false
+	if result.Err() != nil && result.Err() != mongo.ErrNoDocuments {
+		err = result.Err()
+		return
+	}
+	result.Decode(&user)
+	fmt.Printf("user: %v\n", user)
+	exist = true
+	return
+}
 func FindUserByEmail(email string) (exist bool, user models.User, err error) {
+	exist = false
 	result := userCollection.FindOne(context.Background(), bson.M{"email": email})
 	if result.Err() != nil && result.Err() != mongo.ErrNoDocuments {
 		err = result.Err()
 		return
 	}
 	result.Decode(&user)
-	if user.ID.IsZero() {
-		exist = false
-		return
-	}
 	exist = true
 	return
 }
 func InserteUser(user models.User) (id string, err error) {
+
 	result, err := userCollection.InsertOne(context.Background(), user)
+	if err != nil {
+		return
+	}
 	id = result.InsertedID.(primitive.ObjectID).Hex()
+	noteRepo := models.NoteRepo{UserId: result.InsertedID.(primitive.ObjectID), NoteList: make([]models.Note, 0)}
+	_, err = noteCollection.InsertOne(context.Background(), noteRepo)
+	if err != nil {
+		return
+	}
 	return
 }
 func UpdateToken(token string, userId string) (err error) {
@@ -38,11 +57,12 @@ func UpdateToken(token string, userId string) (err error) {
 	result, err := userCollection.UpdateOne(
 		context.Background(),
 		filter,
-		primitive.D{
 
-			primitive.E{"$set", bson.E{Key: "token", Value: token}},
-		},
+		bson.D{{"$set", bson.D{bson.E{"token", token}}}},
 	)
+	if err != nil {
+		return
+	}
 	if result.ModifiedCount == 0 {
 		err = mongo.ErrNoDocuments
 	}
@@ -55,4 +75,10 @@ func DeleteAllUsers() (deletedCount int, err error) {
 	return
 }
 
-//func UpdateUser() {}
+func ValidateToken(token string) (user models.User, err error) {
+	exist, user, err := FindUserByToken(token)
+	if !exist || err != nil {
+		err = fmt.Errorf("invalid token")
+	}
+	return
+}

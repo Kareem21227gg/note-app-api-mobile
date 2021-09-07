@@ -6,45 +6,30 @@ import (
 
 	"go-note/server/database"
 	"go-note/server/models"
-
-	"github.com/gorilla/mux"
 )
 
-type HandlerFunction func(*http.ResponseWriter, *http.Request, models.User)
+type HandlerFunctionWithUser func(http.ResponseWriter, *http.Request, models.User)
+type HandlerFunction func(http.ResponseWriter, *http.Request)
 
-func (f HandlerFunction) TokenRequired(w http.ResponseWriter, r *http.Request) {
-	if true {
-		f(&w, r, models.User{})
-	}
-}
-
-var GetAllNote HandlerFunction = func(w *http.ResponseWriter, r *http.Request, user models.User) {
-	(*w).Header().Set("Content-Type", "json")
-	json.NewEncoder(*w).Encode(models.GetAllResult{Result: database.GetAllNote()})
-}
-
-func InsertNote(w http.ResponseWriter, r *http.Request) {
+func (f HandlerFunctionWithUser) TokenRequired(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "json")
-	var note models.Note
-	err := json.NewDecoder(r.Body).Decode(&note)
-	if err != nil {
-		json.NewEncoder(w).Encode(models.ErrorResult{Message: err.Error()})
+	token := r.Header.Get("token")
+	if token == "" {
+		writeErrorMes(w, "token required")
 		return
 	}
-	var res models.InsertResult
-	res.InsertedID = database.InsertOneNote(note)
-	json.NewEncoder(w).Encode(res)
+	user, err := database.ValidateToken(token)
+	if err != nil {
+		writeErrorMes(w, err.Error())
+		return
+	}
+	f(w, r, user)
 }
 
-func DeleteNote(w http.ResponseWriter, r *http.Request) {
+func (f HandlerFunction) EmptyMiddleware(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "json")
-	//Could i be more complicated???
-	json.NewEncoder(w).Encode(models.DeleteOneResult{Id: database.DeleteNote(mux.Vars(r)["id"])})
+	f(w, r)
 }
-
-func DeleteAllNote(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "json")
-	count := database.DeleteAllNote()
-	inter := models.DeleteAllResult{DeletedCount: count}
-	json.NewEncoder(w).Encode(inter)
+func writeErrorMes(w http.ResponseWriter, msg string) {
+	json.NewEncoder(w).Encode(models.ErrorResult{Message: msg})
 }
