@@ -13,23 +13,40 @@ import (
 func FindUserByToken(token string) (exist bool, user models.User, err error) {
 	result := userCollection.FindOne(context.Background(), bson.M{"token": token})
 	exist = false
-	if result.Err() != nil && result.Err() != mongo.ErrNoDocuments {
+	if result.Err() != nil {
+		if result.Err() == mongo.ErrNoDocuments {
+			fmt.Printf("user: %v\n", user)
+			return
+		}
 		err = result.Err()
 		return
 	}
-	result.Decode(&user)
-	fmt.Printf("user: %v\n", user)
+	err = result.Decode(&user)
+
+	if err != nil {
+		return
+	}
 	exist = true
 	return
 }
+
 func FindUserByEmail(email string) (exist bool, user models.User, err error) {
 	exist = false
 	result := userCollection.FindOne(context.Background(), bson.M{"email": email})
-	if result.Err() != nil && result.Err() != mongo.ErrNoDocuments {
+	if result.Err() != nil {
+		if result.Err() == mongo.ErrNoDocuments {
+
+			return
+		}
 		err = result.Err()
+
 		return
 	}
-	result.Decode(&user)
+	err = result.Decode(&user)
+
+	if err != nil {
+		return
+	}
 	exist = true
 	return
 }

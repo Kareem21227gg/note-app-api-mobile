@@ -42,7 +42,7 @@ var SignUp HandlerFunction = func(w http.ResponseWriter, r *http.Request) {
 	}
 	user.Password = password
 
-	token, err := helper.GenerateAllTokens(user.Email, user.Name, user.ID.Hex(), user.Token)
+	token, err := helper.GenerateAllTokens(user.Email)
 	if err != nil {
 		writeErrorMes(w, err.Error())
 		return
@@ -78,7 +78,7 @@ var Login HandlerFunction = func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, err := helper.GenerateAllTokens(foundUser.Email, foundUser.Name, foundUser.ID.Hex(), foundUser.Token)
+	token, err := helper.GenerateAllTokens(foundUser.Email)
 	if err != nil {
 		writeErrorMes(w, err.Error())
 		return

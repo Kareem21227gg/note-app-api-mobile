@@ -1,9 +1,24 @@
 package helper
 
 import (
+	"time"
+
 	"github.com/dgrijalva/jwt-go"
 )
 
-func GenerateAllTokens(email string, name string, id string, oldToken string) (token string, err error) {
-	return jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{"id": id}).SignedString([]byte(GetEnvMap()["SECRET_KEY"]))
+type SignedDetails struct {
+	Email string
+	jwt.StandardClaims
+}
+
+//
+func GenerateAllTokens(email string) (token string, err error) {
+	claims := &SignedDetails{
+		Email: email,
+		StandardClaims: jwt.StandardClaims{
+			ExpiresAt: time.Now().Local().Add(time.Hour * time.Duration(24)).Unix(),
+		},
+	}
+	return jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString([]byte(GetEnvMap()["SECRET_KEY"]))
+
 }
