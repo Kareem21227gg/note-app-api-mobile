@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"go-note/server/helper"
 	"go-note/server/router"
 	"log"
@@ -9,9 +8,13 @@ import (
 )
 
 func main() {
-	envMAp := helper.GetEnvMap()
+
 	r := router.Router()
-	fmt.Println("Starting server on the port ", envMAp["PORT"], "...")
-	log.Fatal(http.ListenAndServe(":"+envMAp["PORT"], r))
+	log.Fatal(http.ListenAndServe(":"+gitPort(), r))
+
+}
+func gitPort() string {
+
+	return helper.GetEnv("PORT")
 
 }

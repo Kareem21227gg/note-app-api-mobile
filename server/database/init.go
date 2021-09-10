@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"go-note/server/helper"
 	"log"
+	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -12,15 +13,16 @@ import (
 
 var client *mongo.Client
 
-var envMAp map[string]string
 var noteCollection *mongo.Collection
 var userCollection *mongo.Collection
 
 func init() {
-	envMAp = helper.GetEnvMap()
-	clientOptions := options.Client().ApplyURI(envMAp["CONNECTION_STRING"])
+
+	clientOptions := options.Client().ApplyURI(helper.GetEnv("CONNECTION_STRING"))
 	var err error
-	client, err = mongo.Connect(context.TODO(), clientOptions)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	client, err = mongo.Connect(ctx, clientOptions)
 	checkErr(err)
 	err = client.Ping(context.TODO(), nil)
 	checkErr(err)
@@ -29,8 +31,8 @@ func init() {
 	noteCollection = OpenCollection("notelist")
 }
 func OpenCollection(collectionName string) *mongo.Collection {
-	fmt.Println(envMAp["DB_NAME"], collectionName)
-	return client.Database(envMAp["DB_NAME"]).Collection(collectionName)
+	fmt.Println(helper.GetEnv("DB_NAME"), collectionName)
+	return client.Database(helper.GetEnv("DB_NAME")).Collection(collectionName)
 }
 func checkErr(err error) {
 	if err != nil {

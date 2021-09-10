@@ -27,15 +27,19 @@ var SignUp HandlerFunction = func(w http.ResponseWriter, r *http.Request) {
 	}
 
 	exist, _, err := database.FindUserByEmail(user.Email)
+
 	if err != nil {
 		writeErrorMes(w, err.Error())
 		return
 	}
+
 	if exist {
 		writeErrorMes(w, "this email or phone number already exists")
 		return
 	}
+
 	password, err := helper.Hashpassword(user.Password)
+
 	if err != nil {
 		writeErrorMes(w, err.Error())
 		return
@@ -43,12 +47,15 @@ var SignUp HandlerFunction = func(w http.ResponseWriter, r *http.Request) {
 	user.Password = password
 
 	token, err := helper.GenerateAllTokens(user.Email)
+
 	if err != nil {
 		writeErrorMes(w, err.Error())
 		return
 	}
 	user.Token = token
+
 	_, err = database.InserteUser(user)
+
 	if err != nil {
 		writeErrorMes(w, "User item was not created")
 		return

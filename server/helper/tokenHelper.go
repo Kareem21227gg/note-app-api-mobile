@@ -19,6 +19,6 @@ func GenerateAllTokens(email string) (token string, err error) {
 			ExpiresAt: time.Now().Local().Add(time.Hour * time.Duration(24)).Unix(),
 		},
 	}
-	return jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString([]byte(GetEnvMap()["SECRET_KEY"]))
+	return jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString([]byte(GetEnv("SECRET_KEY")))
 
 }

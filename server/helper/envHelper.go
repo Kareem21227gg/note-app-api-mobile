@@ -19,6 +19,6 @@ func init() {
 		log.Fatal(err)
 	}
 }
-func GetEnvMap() map[string]string {
-	return envMAp
+func GetEnv(key string) string {
+	return envMAp[key]
 }

@@ -31,15 +31,15 @@ func FindUserByToken(token string) (exist bool, user models.User, err error) {
 }
 
 func FindUserByEmail(email string) (exist bool, user models.User, err error) {
+
 	exist = false
 	result := userCollection.FindOne(context.Background(), bson.M{"email": email})
+
 	if result.Err() != nil {
 		if result.Err() == mongo.ErrNoDocuments {
-
 			return
 		}
 		err = result.Err()
-
 		return
 	}
 	err = result.Decode(&user)
