@@ -16,15 +16,6 @@ class AuthLocalDataSourse {
     }
   }
 
-  String GetToken() {
-    return pref.getString(TOKEN_KEY)!;
-  }
-
-  SingResult GetUser() {
-    String res = pref.getString(USER_KEY)!;
-    return SingResult.fromJson(json.decode(res));
-  }
-
   Future<void> SetUser(SingResult user) async {
     await SetToken(user.token);
     bool res = await pref.setString(USER_KEY, json.encode(user.toJson()));

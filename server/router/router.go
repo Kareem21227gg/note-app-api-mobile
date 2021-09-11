@@ -2,12 +2,14 @@ package router
 
 import (
 	"go-note/server/middleware"
+	"net/http"
 
 	"github.com/gorilla/mux"
 )
 
 func Router() *mux.Router {
 	router := mux.NewRouter()
+	router.NotFoundHandler = http.NotFoundHandler()
 	router.HandleFunc("/api/note", middleware.GetAllNote.TokenRequired).Methods("GET", "OPTIONS")
 	router.HandleFunc("/api/note", middleware.InsertNote.TokenRequired).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/deleteNote/{id}", middleware.DeleteNote.TokenRequired).Methods("DELETE", "OPTIONS")

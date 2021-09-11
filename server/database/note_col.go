@@ -35,7 +35,7 @@ func InsertOneNote(userId primitive.ObjectID, note models.Note) (noteId string, 
 	note.ID = primitive.NewObjectID()
 	noteRepo.NoteList = append(noteRepo.NoteList, note)
 
-	err = UpdateNoteRepo(noteRepo, userId)
+	_, err = UpdateNoteRepo(noteRepo, userId)
 	if err != nil {
 		return
 	}
@@ -51,13 +51,19 @@ func DeleteNote(userId primitive.ObjectID, idHex string) (id string, err error) 
 	if err != nil {
 		return "", err
 	}
+	success := false
 	for i, n := range noteRepo.NoteList {
 		if n.ID == obj {
+			success = true
 			noteRepo.NoteList = append(noteRepo.NoteList[:i], noteRepo.NoteList[i+1:]...)
 			break
 		}
 	}
-	err = UpdateNoteRepo(noteRepo, userId)
+	if !success {
+		err = fmt.Errorf("can not find note")
+		return idHex, err
+	}
+	_, err = UpdateNoteRepo(noteRepo, userId)
 	if err != nil {
 		return
 	}
@@ -68,19 +74,21 @@ func DeleteAllNote(userId primitive.ObjectID) (count int, err error) {
 	if err != nil {
 		return 0, err
 	}
-	count = len(noteRepo.NoteList)
+
 	noteRepo.NoteList = make([]models.Note, 0)
-	err = UpdateNoteRepo(noteRepo, userId)
+	count, err = UpdateNoteRepo(noteRepo, userId)
 	if err != nil {
 		return
 	}
 	return
 }
-func UpdateNoteRepo(noteRepo models.NoteRepo, userId primitive.ObjectID) (err error) {
+func UpdateNoteRepo(noteRepo models.NoteRepo, userId primitive.ObjectID) (counter int, err error) {
 	result, err := noteCollection.ReplaceOne(context.Background(), bson.M{"userid": userId}, noteRepo)
-	if err != nil || result.ModifiedCount == 0 {
+
+	if err != nil {
 		err = fmt.Errorf("error will modify doc")
 		return
 	}
+	counter = int(result.ModifiedCount)
 	return
 }

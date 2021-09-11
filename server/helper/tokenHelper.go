@@ -12,7 +12,7 @@ type SignedDetails struct {
 }
 
 //
-func GenerateAllTokens(email string) (token string, err error) {
+func GenerateToken(email string) (token string, err error) {
 	claims := &SignedDetails{
 		Email: email,
 		StandardClaims: jwt.StandardClaims{

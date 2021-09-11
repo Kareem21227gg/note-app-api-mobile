@@ -26,7 +26,7 @@ class AuthRemoteDataSourse {
   SingResult _authMethopud(Response response) {
     Map<String, String> map = json.decode(response.body);
     if (map.containsKey("error_msg")) {
-      throw Exception();
+      throw Exception(map["error_msg"]);
     } else {
       return SingResult.fromJson(map);
     }
