@@ -32,7 +32,7 @@ dependencies:
   dartz:
   equatable: 
   shared_preferences:
-  
+  bloc:
 dev_dependencies:
   flutter_test:
     sdk: flutter
