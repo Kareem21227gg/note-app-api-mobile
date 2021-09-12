@@ -23,4 +23,5 @@ class CreateNoteParam extends Equatable {
   CreateNoteParam({required this.body});
   @override
   List<Object?> get props => [body];
+  Map<String, dynamic> get toJson => {"body": body};
 }

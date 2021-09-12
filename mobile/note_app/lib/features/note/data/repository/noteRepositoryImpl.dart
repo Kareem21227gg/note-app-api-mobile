@@ -11,27 +11,37 @@ import 'package:note_app/features/note/domain/usecase/createNote.dart';
 
 class NoteRepositoryImpl implements NoteRepository {
   final NoteRemoteDataSource remoteDataSource;
-  final AuthState auth;
-  NoteRepositoryImpl({required this.auth, required this.remoteDataSource});
+
+  NoteRepositoryImpl({required this.remoteDataSource});
   @override
   Future<Either<Failure, CreateNoteResult>> createNote(
       CreateNoteParam param) async {
-    try {} catch (e) {}
+    return _tryCatchFailure<CreateNoteResult>(() {
+      return remoteDataSource.createNote(param);
+    });
   }
 
   @override
   Future<Either<Failure, DeleteNoteResult>> deleteNote(
       DeleteNoteParam param) async {
-    try {
-      var result = await remoteDataSource.deleteNote(param, auth.getToken());
-      return Right(result);
-    } catch (e) {
-      return Left(NetWorkFailure(e.toString()));
-    }
+    return _tryCatchFailure<DeleteNoteResult>(() {
+      return remoteDataSource.deleteNote(param);
+    });
   }
 
   @override
   Future<Either<Failure, GetAllNoteResult>> getAllNote() {
-    try {} catch (e) {}
+    return _tryCatchFailure<GetAllNoteResult>(() {
+      return remoteDataSource.getAllNote();
+    });
+  }
+
+  Future<Either<Failure, T>> _tryCatchFailure<T>(Future<T> f()) async {
+    try {
+      var res = await f();
+      return Right(res);
+    } catch (e) {
+      return Left(NetWorkFailure(e.toString()));
+    }
   }
 }
