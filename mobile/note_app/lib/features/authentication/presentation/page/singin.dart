@@ -78,9 +78,7 @@ class _SingInState extends State<SingIn> {
                   onTap: () {
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
-                        builder: (_) => SingPage(
-                          index: 1,
-                        ),
+                        builder: (_) => SingPage(),
                       ),
                     );
                   },

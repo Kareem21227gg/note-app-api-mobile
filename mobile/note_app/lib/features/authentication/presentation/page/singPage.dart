@@ -8,10 +8,8 @@ import 'package:note_app/features/authentication/presentation/widget/customTextF
 
 // ignore: must_be_immutable
 class SingPage extends StatefulWidget {
-  int? index;
   SingPage({
     Key? key,
-    this.index,
   }) : super(key: key);
 
   @override
@@ -19,13 +17,12 @@ class SingPage extends StatefulWidget {
 }
 
 class _SingPageState extends State<SingPage> {
-  int? index;
+  bool singin = true;
   late SizeHelper sh;
   late List<Widget> pages;
   @override
   void initState() {
     super.initState();
-    index = widget.index ?? 0;
   }
 
   @override
@@ -42,6 +39,7 @@ class _SingPageState extends State<SingPage> {
     return Scaffold(
       body: Stack(
         children: [
+          pages[singin ? 0 : 1],
           Positioned(
             height: sh.getHeightWithKeybord(90),
             left: sh.getLeft(20),
@@ -49,10 +47,10 @@ class _SingPageState extends State<SingPage> {
             top: sh.getTopWithKeybord(337),
             child: BottomNavigationBar(
               elevation: 0,
-              currentIndex: index!,
+              currentIndex: singin ? 0 : 1,
               onTap: (x) {
                 setState(() {
-                  index = x;
+                  singin = ((singin ? 0 : 1) == x) ? singin : !singin;
                 });
               },
               items: [
@@ -61,7 +59,7 @@ class _SingPageState extends State<SingPage> {
                   icon: Text(
                     "Signin",
                     style: TextStyle(
-                      color: index == 0 ? primaryColor : hintColor,
+                      color: singin ? primaryColor : hintColor,
                       fontSize: sh.getFontSizeWithKeybord(40),
                     ),
                   ),
@@ -71,7 +69,7 @@ class _SingPageState extends State<SingPage> {
                   icon: Text(
                     "Signup",
                     style: TextStyle(
-                      color: index == 1 ? primaryColor : hintColor,
+                      color: !singin ? primaryColor : hintColor,
                       fontSize: sh.getFontSizeWithKeybord(40),
                     ),
                   ),
@@ -79,34 +77,8 @@ class _SingPageState extends State<SingPage> {
               ],
             ),
           ),
-          pages[index!],
         ],
       ),
-      // bottomNavigationBar: BottomNavigationBar(
-      //   currentIndex: index,
-      //   onTap: (x) {
-      //     setState(() {
-      //       index = x;
-      //     });
-      //   },
-      //   items: [
-      //     BottomNavigationBarItem(
-      //       label: "Sign in",
-      //       icon: Text(
-      //         "Signin",
-      //         style: TextStyle(fontSize: sh.getFontSizeWithKeybord(60)),
-      //       ),
-      //     ),
-      //     BottomNavigationBarItem(
-      //       label: "Sign up",
-      //       icon: Text(
-      //         "Signup",
-      //         style: TextStyle(fontSize: sh.getFontSizeWithKeybord(60)),
-      //       ),
-      //     ),
-      //   ],
-      // ),
-      // body: pages[index],
     );
   }
 }

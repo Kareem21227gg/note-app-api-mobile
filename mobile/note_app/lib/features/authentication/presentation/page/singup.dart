@@ -63,9 +63,7 @@ class _SingUpState extends State<SingUp> {
                   onTap: () {
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
-                        builder: (_) => SingPage(
-                          index: 0,
-                        ),
+                        builder: (_) => SingPage(),
                       ),
                     );
                   },
