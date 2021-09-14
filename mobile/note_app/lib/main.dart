@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'features/authentication/presentation/page/singPage.dart';
+import 'init.dart';
 
 void main() {
+  init();
   runApp(MyApp());
 }
 

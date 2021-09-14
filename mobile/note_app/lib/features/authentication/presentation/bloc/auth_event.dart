@@ -7,10 +7,10 @@ class SingInSubmit extends AuthEvent {}
 
 class SingUpSubmit extends AuthEvent {}
 
-class SetSingIn extends AuthEvent {
-  final bool isSingIn;
+class SetPage extends AuthEvent {
+  final int page;
 
-  SetSingIn(this.isSingIn);
+  SetPage(this.page);
 }
 
 class SetName extends AuthEvent {

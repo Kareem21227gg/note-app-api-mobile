@@ -1,6 +1,7 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 
 part 'auth_event.dart';
@@ -8,8 +9,8 @@ part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc() : super(AuthState.initilal());
-  void setSingIn(bool isSingIn) {
-    add(SetSingIn(isSingIn));
+  void setPage(int page) {
+    add(SetPage(page));
   }
 
   void setName(String name) {
@@ -31,5 +32,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   @override
   Stream<AuthState> mapEventToState(
     AuthEvent event,
-  ) async* {}
+  ) async* {
+    if (event is SetPage) {
+      print("old: " + state.page.toString());
+      yield state.cobyWith(page: event.page);
+      print(" new: " + state.page.toString());
+    }
+  }
 }

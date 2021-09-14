@@ -1,7 +1,7 @@
 part of 'auth_bloc.dart';
 
 class AuthState {
-  bool singin;
+  int page;
   String? name;
   String? nameError;
   String? email;
@@ -10,7 +10,7 @@ class AuthState {
   String? password;
   bool passwordVisible;
   AuthState({
-    required this.singin,
+    required this.page,
     this.name,
     this.nameError,
     this.email,
@@ -21,10 +21,10 @@ class AuthState {
   });
   factory AuthState.initilal() => AuthState(
         passwordVisible: false,
-        singin: true,
+        page: 0,
       );
   AuthState cobyWith({
-    bool? singin,
+    int? page,
     String? name,
     String? nameError,
     String? email,
@@ -33,14 +33,15 @@ class AuthState {
     String? password,
     bool? passwordVisible,
   }) {
-    return this
-      ..name = name ?? this.name
-      ..singin = singin ?? this.singin
-      ..nameError = nameError ?? this.nameError
-      ..emailError = emailError ?? this.emailError
-      ..email = email ?? this.email
-      ..passwordError = passwordError ?? this.passwordError
-      ..password = password ?? this.password
-      ..passwordVisible = passwordVisible ?? this.passwordVisible;
+    return AuthState(
+      name: name ?? this.name,
+      page: page ?? this.page,
+      nameError: nameError ?? this.nameError,
+      emailError: emailError ?? this.emailError,
+      email: email ?? this.email,
+      passwordError: passwordError ?? this.passwordError,
+      password: password ?? this.password,
+      passwordVisible: passwordVisible ?? this.passwordVisible,
+    );
   }
 }

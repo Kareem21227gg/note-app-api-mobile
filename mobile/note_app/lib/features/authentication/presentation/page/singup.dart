@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:note_app/core/colors.dart';
 import 'package:note_app/core/sizeHelper.dart';
+import 'package:note_app/features/authentication/presentation/bloc/auth_bloc.dart';
 import 'package:note_app/features/authentication/presentation/page/singPage.dart';
 import 'package:note_app/features/authentication/presentation/widget/customTextField.dart';
 
 class SingUp extends StatefulWidget {
+  AuthBloc bloc;
+
   SizeHelper sh;
   SingUp({
     Key? key,
+    required this.bloc,
     required this.sh,
   }) : super(key: key);
 
@@ -61,11 +66,7 @@ class _SingUpState extends State<SingUp> {
                 ),
                 InkWell(
                   onTap: () {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (_) => SingPage(),
-                      ),
-                    );
+                    widget.bloc.setPage(0);
                   },
                   child: Text(
                     'Login now',

@@ -32,8 +32,9 @@ dependencies:
   dartz:
   equatable: 
   shared_preferences:
-  bloc:
+  flutter_bloc: 
   flutter_svg:
+  get_it: ^7.2.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
