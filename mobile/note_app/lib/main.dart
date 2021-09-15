@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:note_app/core/authState.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'features/authentication/presentation/page/singPage.dart';
+import 'home.dart';
 import 'init.dart';
 
-void main() {
-  init();
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await init();
   runApp(MyApp());
 }
 
@@ -12,7 +16,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      routes: {"sing": (context) => SingPage()},
+      routes: {
+        "/": (context) => Home(
+              authState: AuthState(pref: sl<SharedPreferences>()),
+            ),
+        "sing": (context) => SingPage(),
+      },
       theme: ThemeData(
         fontFamily: "PTSans-Regular",
         primarySwatch: const MaterialColor(
@@ -31,7 +40,6 @@ class MyApp extends StatelessWidget {
           },
         ),
       ),
-      home: SingPage(),
     );
   }
 }

@@ -8,7 +8,7 @@ class AuthState {
   String? emailError;
   String? passwordError;
   String? password;
-  bool passwordVisible;
+  BuildContext? context;
   AuthState({
     required this.page,
     this.name,
@@ -17,10 +17,9 @@ class AuthState {
     this.emailError,
     this.passwordError,
     this.password,
-    required this.passwordVisible,
+    this.context,
   });
   factory AuthState.initilal() => AuthState(
-        passwordVisible: false,
         page: 0,
       );
   AuthState cobyWith({
@@ -31,17 +30,17 @@ class AuthState {
     String? emailError,
     String? passwordError,
     String? password,
-    bool? passwordVisible,
+    BuildContext? context,
   }) {
     return AuthState(
       name: name ?? this.name,
       page: page ?? this.page,
-      nameError: nameError ?? this.nameError,
-      emailError: emailError ?? this.emailError,
+      nameError: name != null ? nameError : this.nameError,
+      emailError: email != null ? emailError : this.emailError,
       email: email ?? this.email,
-      passwordError: passwordError ?? this.passwordError,
+      passwordError: password != null ? passwordError : this.passwordError,
       password: password ?? this.password,
-      passwordVisible: passwordVisible ?? this.passwordVisible,
+      context: context ?? this.context,
     );
   }
 }

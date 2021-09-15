@@ -37,7 +37,8 @@ class NoteRemoteDataSource {
   }
 
   T _errorCheck<T>(http.Response response) {
-    Map<String, dynamic> map = json.decode(response.body);
+    Map<String, dynamic> map =
+        json.decode(Utf8Decoder().convert(response.bodyBytes));
     if (map.containsKey("error_msg")) {
       throw Exception(map["error_msg"]);
     } else {

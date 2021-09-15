@@ -31,8 +31,8 @@ class SetPassword extends AuthEvent {
   SetPassword(this.password);
 }
 
-class SetPasswordVisible extends AuthEvent {
-  final bool visible;
+class SetContext extends AuthEvent {
+  final BuildContext context;
 
-  SetPasswordVisible(this.visible);
+  SetContext(this.context);
 }

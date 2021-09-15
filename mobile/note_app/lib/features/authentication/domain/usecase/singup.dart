@@ -15,6 +15,8 @@ class SingUpUsecase implements UseCase<Success, SingUpParam> {
   }
 }
 
+//ffffssasd@ccc.com
+//ffff@ccc.com
 class SingUpParam extends Equatable {
   final String email;
   final String password;
@@ -28,8 +30,8 @@ class SingUpParam extends Equatable {
 
   Map<String, dynamic> toJson() {
     return {
-      'email': email,
       'password': password,
+      'email': email,
       'name': name,
     };
   }
