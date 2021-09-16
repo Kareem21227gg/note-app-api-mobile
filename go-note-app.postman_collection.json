@@ -1,0 +1,252 @@
+{
+	"info": {
+		"_postman_id": "8d752486-7777-46b3-a029-dd0f69690c05",
+		"name": "go-note-app",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "get all note",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true,
+				"disabledSystemHeaders": {
+					"content-length": true
+				}
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{token_hanan}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "note",
+							"value": "{body:\"555\"}",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "_id",
+							"value": "23",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "/api/note",
+					"path": [
+						"api",
+						"note"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create note",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{token_kareem}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"body\":\"fff\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/note",
+					"path": [
+						"api",
+						"note"
+					],
+					"query": [
+						{
+							"key": "\"body\"",
+							"value": "\"kkkkk\"",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete note",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmVhdGVkX2F0IjoiMjAyMS0wOS0wN1QwODozMTozNC43MTA2MDEzKzAzOjAwIiwiZW1haWwiOiJoYW5hbmhAYXJlLm0iLCJpZCI6IjYxMzZmOTI0ZThmZjI1YWZiNjExZjA4ZiIsIm5hbWUiOiJoYW5hbmgifQ.j2MnFCXpIt5QwNS9MfP1bpDnFAG321xte14wLZMxTHc",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:8080/api/deleteNote/6136f34c8c0abf823ae94630",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"deleteNote",
+						"6136f34c8c0abf823ae94630"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete all note",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{token_hanan}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:8080/api/deleteNote",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"deleteNote"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmVhdGVkX2F0IjoiMjAyMS0wOS0wN1QwNTozNDoyOC4wNTQ4Njk5KzAzOjAwIiwiZW1haWwiOiJoYW5hbkBhcmUubSIsImlkIjoiNjEzNmExNWFmMzZkMGFhZjdjYTBhNzQ0IiwibmFtZSI6ImhhbmFuIn0.0x6X63d5eEv5DNQgpVGTQS0xPo-Ko5i355VmahdPU38",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "sing up",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[{\r\n    \"name\":\"kareem\",\r\n    \"password\":\"kareem\",\r\n    \"email\":\"kareem@are.m\"\r\n},\r\n{\"email\":\"sdfsdfds.com\",\"password\":\"dfsdfsdfsfsd\",\"name\":\"dfdfsdfdfdf\"}]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/singup",
+					"path": [
+						"api",
+						"singup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "log in",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"password\":\"kareem\",\r\n    \"email\":\"kareem@are.m\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "/api/login",
+					"path": [
+						"api",
+						"login"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "apikey"
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.test('Add Host To URL', function () {",
+					"\tlet host = pm.collectionVariables.get('host');",
+					"\tif (pm.environment.has('host')) host = pm.environment.get('host');",
+					"\tpm.request.url = host + pm.request.url;",
+					"});",
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "token_kareem",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFbWFpbCI6ImthcmVlbUBhcmUubSIsImV4cCI6MTYzMTI2NDQzM30.jtP0OQw7pVHvOcQ4YziID214y8e2Q8R7bzOpSVqvf78"
+		},
+		{
+			"key": "token_hanan",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFbWFpbCI6ImhhbmFuaEBhcmUubSIsImV4cCI6MTYzMTI2Mzk1N30.jIjicrhbnssNKJSVodWi-HV58p3r5gfEoFRnX3MslbY"
+		},
+		{
+			"key": "token",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFbWFpbCI6ImhhbmFuaEBhcmUubSIsImV4cCI6MTYzMTI2Mzk1N30.jIjicrhbnssNKJSVodWi-HV58p3r5gfEoFRnX3MslbY"
+		},
+		{
+			"key": "host",
+			"value": "https://note-app-note.herokuapp.com"
+		}
+	]
+}
