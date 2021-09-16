@@ -14,7 +14,11 @@ class GetAllNoteResult extends Equatable {
 
   factory GetAllNoteResult.fromMap(Map<String, dynamic> map) {
     return GetAllNoteResult(
-      List<Note>.from(map['result']!.map((x) => Note.fromJson(x))),
+      List<Note>.from(map['result']!.map((x) {
+        if (x != null) {
+          return Note.fromJson(x);
+        }
+      })),
     );
   }
 }

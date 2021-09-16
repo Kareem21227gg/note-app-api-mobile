@@ -5,7 +5,7 @@ class CreateNoteResult extends Equatable {
 
   CreateNoteResult({required this.id});
   factory CreateNoteResult.fromJson(Map<String, dynamic> map) {
-    return CreateNoteResult(id: map["id"]);
+    return CreateNoteResult(id: map["inserted_id"]);
   }
   @override
   List<Object?> get props => [id];

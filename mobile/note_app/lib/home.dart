@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:note_app/features/authentication/presentation/page/singPage.dart';
 import 'package:note_app/features/note/presentation/page/notePage.dart';
 
-import 'core/authState.dart';
+import 'core/userAuthState.dart';
 
 class Home extends StatefulWidget {
-  final AuthState authState;
+  final UserAuthState authState;
   Home({
     Key? key,
     required this.authState,
@@ -18,7 +18,6 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
-    return NotePage();
     if (widget.authState.isSingIn()) {
       return NotePage();
     } else {

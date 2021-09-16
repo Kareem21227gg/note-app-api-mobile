@@ -1,4 +1,4 @@
-import 'package:note_app/core/authState.dart';
+import 'package:note_app/core/userAuthState.dart';
 import 'package:note_app/features/note/data/datasourse/noteRemoteDataSourse.dart';
 import 'package:note_app/features/note/domain/entities/getAllResult.dart';
 import 'package:note_app/features/note/domain/entities/deleteNoteResult.dart';
@@ -41,6 +41,7 @@ class NoteRepositoryImpl implements NoteRepository {
       var res = await f();
       return Right(res);
     } catch (e) {
+      print(e);
       return Left(NetWorkFailure(e.toString()));
     }
   }

@@ -9,6 +9,7 @@ class GetAllNoteUsecase implements UseCase<GetAllNoteResult, Null> {
   GetAllNoteUsecase({
     required this.noteRepository,
   });
+
   @override
   Future<Either<Failure, GetAllNoteResult>> call(Null) {
     return noteRepository.getAllNote();

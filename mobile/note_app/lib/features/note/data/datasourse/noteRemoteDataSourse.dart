@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:ffi';
 
 import 'package:http/http.dart' as http;
-import 'package:note_app/core/authState.dart';
+import 'package:note_app/core/userAuthState.dart';
 
 import 'package:note_app/core/constant.dart';
 import 'package:note_app/core/uriGenerator.dart';
@@ -14,7 +14,7 @@ import 'package:note_app/features/note/domain/usecase/deleteNote.dart';
 
 class NoteRemoteDataSource {
   final http.Client client;
-  final AuthState auth;
+  final UserAuthState auth;
   NoteRemoteDataSource({required this.auth, required this.client});
 
   Future<DeleteNoteResult> deleteNote(DeleteNoteParam param) async {
@@ -26,7 +26,7 @@ class NoteRemoteDataSource {
 
   Future<CreateNoteResult> createNote(CreateNoteParam param) async {
     var result = await client.post(createNote_Uri(),
-        body: param.toJson, headers: _headerToken);
+        body: json.encode(param.toJson), headers: _headerToken);
 
     return _errorCheck<CreateNoteResult>(result);
   }
@@ -39,10 +39,19 @@ class NoteRemoteDataSource {
   T _errorCheck<T>(http.Response response) {
     Map<String, dynamic> map =
         json.decode(Utf8Decoder().convert(response.bodyBytes));
+
     if (map.containsKey("error_msg")) {
       throw Exception(map["error_msg"]);
     } else {
-      return CreateNoteResult.fromJson(map) as T;
+      if (T.toString() == "GetAllNoteResult") {
+        return GetAllNoteResult.fromMap(map) as T;
+      } else if (T.toString() == "CreateNoteResult") {
+        return CreateNoteResult.fromJson(map) as T;
+      } else if (T.toString() == "DeleteNoteResult") {
+        return DeleteNoteResult.fromJson(map) as T;
+      } else {
+        throw Exception("un-immplementaed");
+      }
     }
   }
 

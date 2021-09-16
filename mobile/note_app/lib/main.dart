@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:note_app/core/authState.dart';
+import 'package:note_app/core/userAuthState.dart';
 import 'package:note_app/theme/lightTheme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
 
 Map<String, Widget Function(BuildContext)> routes = {
   "/": (_) => Home(
-        authState: AuthState(pref: sl<SharedPreferences>()),
+        authState:sl<UserAuthState>(),
       ),
   "sing": (_) => SingPage(),
   "note": (_) => NotePage(),

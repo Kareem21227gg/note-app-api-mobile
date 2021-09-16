@@ -4,10 +4,10 @@ import 'package:note_app/core/constant.dart';
 import 'package:note_app/features/authentication/data/model/singResult.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AuthState {
+class UserAuthState {
   final SharedPreferences pref;
 
-  AuthState({required this.pref});
+  UserAuthState({required this.pref});
 
   bool isSingIn() {
     String? token = pref.getString(TOKEN_KEY);

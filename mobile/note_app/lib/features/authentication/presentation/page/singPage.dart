@@ -29,6 +29,12 @@ class _SingPageState extends State<SingPage> {
   }
 
   @override
+  void dispose() {
+    bloc.close();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     sh = SizeHelper(context);
     return Scaffold(
