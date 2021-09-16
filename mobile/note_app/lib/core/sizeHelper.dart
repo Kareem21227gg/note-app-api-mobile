@@ -34,6 +34,10 @@ class SizeHelper {
         XD_SCREEN_HEIGHT;
   }
 
+  double getTopapoveKeyBord(double top) {
+    return getTop(top) - MediaQuery.of(context).viewInsets.bottom;
+  }
+
   double getHeightWithKeybord(double height) {
     return height *
         (this.height - MediaQuery.of(context).viewInsets.bottom / 2) /
@@ -47,5 +51,16 @@ class SizeHelper {
   double getFontSize(double size) {
     return getHeight(size);
     //  return (getHeight(size) + getWidth(size)) / 2;
+  }
+
+  double getsizeHeighSmart(double size) {
+    double x = getHeight(size);
+    if (x < size / 1.5) {
+      return size / 1.5;
+    } else if (x > size * 1.5) {
+      return size * 1.5;
+    } else {
+      return x;
+    }
   }
 }

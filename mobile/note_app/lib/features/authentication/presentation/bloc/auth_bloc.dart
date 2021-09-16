@@ -50,6 +50,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     add(SetPassword(password));
   }
 
+  void setPasswordVisible(bool visible) {
+    add(SetPasswordVisible(visible));
+  }
+
   @override
   Stream<AuthState> mapEventToState(
     AuthEvent event,
@@ -69,6 +73,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     } else if (event is SetName) {
       yield state.cobyWith(
           name: event.name, nameError: nameValidate(event.name));
+    } else if (event is SetPasswordVisible) {
+      yield state.cobyWith(passwordVisible: event.visible);
     } else if (event is SingInSubmit) {
       if (state.emailError == null &&
           state.passwordError == null &&

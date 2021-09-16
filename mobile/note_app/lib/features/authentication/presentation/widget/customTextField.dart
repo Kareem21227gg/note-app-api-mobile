@@ -17,20 +17,23 @@ class CustomTextField extends StatefulWidget {
   double left;
   double fontSize;
   SvgPicture? suffixIcon;
+  void Function()? onPressSuffixIcon;
   late bool obscureText;
-  CustomTextField(
-      {Key? key,
-      required this.onChanged,
-      required this.hintText,
-      required this.errorText,
-      required this.height,
-      required this.width,
-      required this.top,
-      required this.left,
-      required this.fontSize,
-      this.suffixIcon})
-      : super(key: key) {
-    obscureText = suffixIcon != null;
+  CustomTextField({
+    Key? key,
+    required this.onChanged,
+    required this.hintText,
+    required this.errorText,
+    required this.height,
+    required this.width,
+    required this.top,
+    required this.left,
+    required this.fontSize,
+    this.onPressSuffixIcon,
+    this.suffixIcon,
+    obscureText,
+  }) : super(key: key) {
+    this.obscureText = obscureText ?? suffixIcon != null;
   }
   @override
   _CustomTextFieldState createState() => _CustomTextFieldState();
@@ -56,13 +59,16 @@ class _CustomTextFieldState extends State<CustomTextField> {
                   splashRadius: Material.defaultSplashRadius / 3,
                   icon: widget.suffixIcon!,
                   onPressed: () {
-                    setState(() {
-                      widget.obscureText = !widget.obscureText;
+                    if (widget.onPressSuffixIcon != null) {
+                      widget.onPressSuffixIcon!();
+                    }
+                    if (widget.suffixIcon != null) {
                       widget.suffixIcon = cobyWith(
                           widget.obscureText ? hintColor : primaryColor,
                           widget.suffixIcon!.pictureProvider
                               as ExactAssetPicture);
-                    });
+                    }
+                    ;
                   },
                 )
               : null,
@@ -80,6 +86,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
   }
 
   SvgPicture cobyWith(Color color, ExactAssetPicture pictureProvider) {
+    print(color);
     return SvgPicture.asset(
       pictureProvider.assetName,
       color: color,

@@ -7,63 +7,73 @@ import 'package:note_app/features/authentication/presentation/bloc/auth_bloc.dar
 import 'package:note_app/features/authentication/presentation/page/singPage.dart';
 import 'package:note_app/features/authentication/presentation/widget/customTextField.dart';
 
-class SingUp {
+class SingUp extends StatefulWidget {
   AuthBloc bloc;
-
+  Key? key;
   SizeHelper sh;
   SingUp({
+    this.key,
     required this.bloc,
     required this.sh,
-  });
-  List<Widget> getWidget() => [
+  }) : super(key: key);
+
+  @override
+  _SingUpState createState() => _SingUpState();
+}
+
+class _SingUpState extends State<SingUp> {
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
         Positioned(
-          left: sh.getLeft(87.93),
-          top: sh.getTopWithKeybord(121.83),
+          left: widget.sh.getLeft(87.93),
+          top: widget.sh.getTopWithKeybord(121.83),
           child: Image.asset(
             "assets/sing_icon.png",
-            width: sh.getWidth(203.92),
-            height: sh.getHeight(191.5),
+            width: widget.sh.getWidth(203.92),
+            height: widget.sh.getHeight(191.5),
           ),
         ),
         Positioned(
-          left: sh.getLeft(38),
-          top: sh.getTop(646),
-          width: sh.getWidth(300),
-          height: sh.getHeight(52),
+          left: widget.sh.getLeft(38),
+          top: widget.sh.getTop(646),
+          width: widget.sh.getWidth(300),
+          height: widget.sh.getHeight(52),
           child: ElevatedButton(
             onPressed: () {
-              bloc.submit();
+              widget.bloc.submit();
             },
             child: Text(
               "Create Account",
               style: TextStyle(
                   color: whiteColor,
-                  fontSize: sh.getFontSize(16),
+                  fontSize: widget.sh.getFontSize(16),
                   fontWeight: FontWeight.bold),
             ),
           ),
         ),
         Positioned(
-          top: sh.getTop(749),
-          left: sh.getLeft(90),
+          top: widget.sh.getTop(749),
+          left: widget.sh.getLeft(90),
           child: Wrap(
             children: [
               Text(
                 'Already have an account? ',
                 style: TextStyle(
                   color: blackColor,
-                  fontSize: sh.getFontSize(12),
+                  fontSize: widget.sh.getFontSize(12),
                 ),
               ),
               InkWell(
                 onTap: () {
-                  bloc.setPage(0);
+                  widget.bloc.setPage(0);
                 },
                 child: Text(
                   'Login now',
                   style: TextStyle(
                     color: primaryColor,
-                    fontSize: sh.getFontSize(12),
+                    fontSize: widget.sh.getFontSize(12),
                   ),
                 ),
               ),
@@ -71,44 +81,49 @@ class SingUp {
           ),
         ),
         CustomTextField(
-          fontSize: sh.getFontSize(14),
-          errorText: bloc.state.nameError,
+          fontSize: widget.sh.getFontSize(14),
+          errorText: widget.bloc.state.nameError,
           hintText: "Name",
           onChanged: (str) {
-            bloc.setName(str);
+            widget.bloc.setName(str);
           },
-          top: sh.getTopWithKeybord(451),
-          left: sh.getLeft(38),
-          height: sh.getHeightWithKeybord(52),
-          width: sh.getWidth(300),
+          top: widget.sh.getTopWithKeybord(451),
+          left: widget.sh.getLeft(38),
+          height: widget.sh.getHeightWithKeybord(52),
+          width: widget.sh.getWidth(300),
         ),
         CustomTextField(
-          fontSize: sh.getFontSize(14),
-          errorText: bloc.state.emailError,
+          fontSize: widget.sh.getFontSize(14),
+          errorText: widget.bloc.state.emailError,
           hintText: "Email Address",
           onChanged: (str) {
-            bloc.steEmail(str);
+            widget.bloc.steEmail(str);
           },
-          top: sh.getTopWithKeybord(517),
-          left: sh.getLeft(38),
-          height: sh.getHeightWithKeybord(52),
-          width: sh.getWidth(300),
+          top: widget.sh.getTopWithKeybord(517),
+          left: widget.sh.getLeft(38),
+          height: widget.sh.getHeightWithKeybord(52),
+          width: widget.sh.getWidth(300),
         ),
         CustomTextField(
+          onPressSuffixIcon: () => widget.bloc
+              .setPasswordVisible(!widget.bloc.state.passwordVisible!),
+          obscureText: !widget.bloc.state.passwordVisible!,
           suffixIcon: SvgPicture.asset(
             "assets/svg.svg",
             color: hintColor,
           ),
-          fontSize: sh.getFontSize(14),
-          errorText: bloc.state.passwordError,
+          fontSize: widget.sh.getFontSize(14),
+          errorText: widget.bloc.state.passwordError,
           hintText: "Password",
           onChanged: (str) {
-            bloc.setPassword(str);
+            widget.bloc.setPassword(str);
           },
-          top: sh.getTopWithKeybord(583),
-          left: sh.getLeft(38),
-          height: sh.getHeightWithKeybord(52),
-          width: sh.getWidth(300),
+          top: widget.sh.getTopWithKeybord(583),
+          left: widget.sh.getLeft(38),
+          height: widget.sh.getHeightWithKeybord(52),
+          width: widget.sh.getWidth(300),
         ),
-      ];
+      ],
+    );
+  }
 }

@@ -22,7 +22,7 @@ class SingPage extends StatefulWidget {
 class _SingPageState extends State<SingPage> {
   AuthBloc bloc = sl<AuthBloc>();
   late SizeHelper sh;
-  late List<List<Widget>> pages;
+  late List<Widget> pages;
   @override
   void initState() {
     super.initState();
@@ -40,16 +40,16 @@ class _SingPageState extends State<SingPage> {
             SingIn(
               bloc: bloc,
               sh: sh,
-            ).getWidget(),
+            ),
             SingUp(
               bloc: bloc,
               sh: sh,
-            ).getWidget(),
+            ),
           ];
 
           return Stack(
             children: [
-              ...pages[state.page],
+              pages[state.page],
               Positioned(
                 height: sh.getHeightWithKeybord(90),
                 left: sh.getLeft(20),

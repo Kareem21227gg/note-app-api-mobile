@@ -36,3 +36,8 @@ class SetContext extends AuthEvent {
 
   SetContext(this.context);
 }
+
+class SetPasswordVisible extends AuthEvent {
+  final bool visible;
+  SetPasswordVisible(this.visible);
+}
