@@ -9,4 +9,18 @@ simple app contains two pages:
 - note page (view, add, delete, log out)
 - sing page (sing in, sing up)
 
+## Screenshots 
+<table>
+  <tr>
+     <td>not page</td>
+     <td>sing page </td>
+    
+  </tr>
+  <tr>
+    <td><img src="screenshots/note.jpg" width=318  height=552></td>
+    <td><img src="screenshots/sing.jpg" width=318  height=552></td>
+     </tr>
+ </table>
+
+
 
