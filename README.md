@@ -12,7 +12,7 @@ simple app contains two pages:
 ## Screenshots 
 <table>
   <tr>
-     <td>not page</td>
+     <td>note page</td>
      <td>sign page </td>
     
   </tr>
