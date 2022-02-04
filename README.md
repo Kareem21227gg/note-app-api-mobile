@@ -7,13 +7,13 @@ end-to-end note application
 ## Flutter
 simple app contains two pages:
 - note page (view, add, delete, log out)
-- sing page (sing in, sing up)
+- sign page (sign in, sign up)
 
 ## Screenshots 
 <table>
   <tr>
      <td>not page</td>
-     <td>sing page </td>
+     <td>sign page </td>
     
   </tr>
   <tr>
